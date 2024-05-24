@@ -29,7 +29,7 @@ class Reward:
         steering_angle = params['steering_angle']
         speed = params['speed']
 
-        current_waypoint = waypoints[closest_waypoints[1]]
+        current_waypoint = closest_waypoints[1]
 
         # Calculate the direction of the center line based on the closest waypoints
         reward_direction = 0.0
