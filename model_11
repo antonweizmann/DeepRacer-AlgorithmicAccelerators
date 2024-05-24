@@ -34,16 +34,13 @@ class Reward:
         # Calculate the direction of the center line based on the closest waypoints
         reward_direction = 0.0
         total_weight = 0.0
-        for i in range(current_waypoint, current_waypoint + 10):
+        for i in range(current_waypoint, current_waypoint + 5):
             angle = get_angle(waypoints[i % waypoint_count], [agent_x, agent_y])
             angle_diff = abs(agent_angle - angle)
             if angle_diff > 180:
                 angle_diff = 360 - angle_diff
-            weight = i + 1 - current_waypoint * (10 - i + current_waypoint)
-            total_weight += weight
-            reward_direction += weight * (180 - angle_diff) / 180
-        reward_direction /= total_weight
-
+            reward_direction += (180 - angle_diff) / 180
+            reward_direction /= 5
         # track_direction = get_angle(waypoints[closest_waypoints[1]], waypoints[closest_waypoints[0]])
         # direction_diff = abs(track_direction - agent_angle)
         # if direction_diff > 180:
