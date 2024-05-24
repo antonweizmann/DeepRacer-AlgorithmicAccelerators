@@ -1,0 +1,60 @@
+
+import math
+
+def get_angle(a, b):
+    return math.degrees(math.atan2(a[1] - b[1], a[0] - b[0]))
+
+class Reward:
+
+    def __init__(self):
+        self.progress_old = 0.0
+
+
+    def reward_function(self, params):
+        # Read input parameters
+        all_wheels_on_track = params['all_wheels_on_track']
+        is_crashed = params['is_crashed']
+        distance_from_center = params['distance_from_center']
+        track_width = params['track_width']
+        progress = params['progress']
+        closest_waypoints = params['closest_waypoints']
+        waypoints = params['waypoints']
+        speed = params['speed']
+        steering_angle = params['steering_angle']
+
+        agent_x = params['x']
+        agent_y = params['y']
+        agent_angle = params['heading']
+
+         # Calculate the direction of the center line based on the closest waypoints
+        # track_direction = get_angle(waypoints[closest_waypoints[1]], waypoints[closest_waypoints[0]])
+        # direction_diff = abs(track_direction - agent_angle)
+        # if direction_diff > 180:
+        #     direction_diff = 360 - direction_diff
+        # points_direction = 10 - direction_diff
+        # reward_direction = 1e-3
+        # if points_direction:
+        #     reward_direction = 0.1 * points_direction
+
+        # calculate progress reward
+        reward_progress = progress - self.progress_old
+        if progress < 10 and self.progress_old > 90:
+            reward_progress += 100
+        reward_progress *= 15
+
+        # weigth components and calculate sum
+        reward = 1.0 * reward_progress + speed * 5
+
+        # punish if off track or crashed
+        if not all_wheels_on_track or is_crashed:
+            reward = 1e-3
+
+        # set old values
+        self.progress_old = progress
+
+        # Always return a float value
+        return float(reward)
+
+reward_object = Reward()
+def reward_function(params):
+    return reward_object.reward_function(params)
